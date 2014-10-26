@@ -1,0 +1,21 @@
+#if($!{showparams} == 'true')
+	<div class="aui-message">
+		$info
+		<br/>
+		<font color="red">$errmsg</font>
+	</div>
+	<div class="sep" style="height:20px;"></div>
+#else
+	#if ($!{errmsg} != '')
+	<div class="aui-message">
+		<font color="red">$errmsg</font>
+	</div>
+	<div class="sep" style="height:20px;"></div>
+	#end
+#end
+#foreach ($p in $pages)
+	#set($bodyWithHtml = $p.get('pageHtml'))
+	#set($page = $p.get('page'))
+	#parse('/templates/includepages-pagecontent.vm')
+	<div class="sep" style="height:20px;border-top:1px solid #ccc;"></div>
+#end

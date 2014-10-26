@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<atlassian-plugin key="com.baidu.bkm.wiki.macro.markdown" name="百度Markdown插件" plugins-version="2">
+	<plugin-info>
+		<description key="com.baidu.bkm.wiki.macro.markdown.desc"></description>
+		<version>1.0.1</version>
+		<vendor name="BP&amp;IT BKM WIKI" url="http://wiki.baidu.com" />
+		<param name="plugin-icon">images/md-logo-16.gif</param>
+		<param name="plugin-logo">images/md-logo-highres.gif</param>
+		<param name="plugin-banner">images/md-banner.png</param>
+	</plugin-info>
+
+	<resource type="i18n" name="i18n" location="i18n/bkm-wiki-macro-markdown" />
+	<resource type="download" key="images" name="images/" location="images/" />
+		
+	<xhtml-macro name="bkm-wiki-macro-markdown" key="bkm-wiki-macro-markdown"
+		i18n-name-key="com.baidu.bkm.wiki.macro.markdown.macro.name" class="com.baidu.bkm.wiki.macro.markdown.MarkdownMacro"
+		icon="/download/resources/com.baidu.bkm.wiki.macro.markdown/images/md-blueprint-icon.png">
+		<description key="com.baidu.bkm.wiki.macro.markdown.macro.desc" />
+		<device-type>mobile</device-type>
+		<parameters />
+	</xhtml-macro>
+
+ 	<web-resource key="md-styles" name="Style">
+		<resource type="download" name="markdown-macro.css" location="styles/markdown-macro.css" />
+	</web-resource>
+
+	<blueprint key="markdown-blueprint" content-template-key="markdown-template" index-key="markdown-blueprint-index" />
+
+	<content-template key="markdown-template" template-title-key="com.baidu.bkm.wiki.macro.markdown.template.name">
+		<description key="com.baidu.bkm.wiki.macro.markdown.template.desc" />
+		<resource name="template" type="download" location="xml/markdown-template.xml" />
+	</content-template>
+
+	<web-item key="markdown-blueprint-web-item" i18n-name-key="com.baidu.bkm.wiki.macro.markdown.blueprint.display.name"
+		section="system.create.dialog/content" weight="1">
+		<description key="com.baidu.bkm.wiki.macro.markdown.blueprint.display.desc" />
+		<resource name="icon" type="download" location="images/md-blueprint-icon.png"/>
+		<param name="blueprintKey" value="markdown-blueprint" />
+	</web-item>
+
+	<component-import key="loginUriProvider" interface="com.atlassian.sal.api.auth.LoginUriProvider" />
+	<component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
+	<component-import key="soyTemplateRenderer" interface="com.atlassian.soy.renderer.SoyTemplateRenderer" />
+	<component-import key="templateRenderer" interface="com.atlassian.templaterenderer.TemplateRenderer" />
+	<component-import key="webResourceManager" interface="com.atlassian.plugin.webresource.WebResourceManager" />
+</atlassian-plugin>

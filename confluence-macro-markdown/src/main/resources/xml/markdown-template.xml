@@ -1,0 +1,10 @@
+<ac:macro ac:name="bkm-wiki-macro-markdown">
+    <ac:plain-text-body>
+        <![CDATA[
+## Start your Markdown here 
+***The \<SCRIPT> or \<CSS> or other danguage tags will be removed to prevent users from the XSS attack!***
+
+This is a paragraph. Please write sth here!
+        ]]>
+    </ac:plain-text-body>
+</ac:macro>

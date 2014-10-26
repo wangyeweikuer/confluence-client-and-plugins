@@ -1,0 +1,21 @@
+## Expected variables:
+## $page - the current blog post object
+## $bodyWithHtml - the text of the current blog post
+## $displayType
+<div class="blog-post-listing">
+    <div class="logo-heading-block">
+        <span class="logoBlock">
+            #userLogoBlock($page.creator)
+        </span>
+        <span class="blogHeading">
+            <a class="blogHeading" href="$req.contextPath$generalUtil.getPageUrl($page)">$page.title</a>
+            <div class="page-metadata not-personal">$action.getText("macros.blogpost.by.posted.on", ["#userLink($page.creator)", $action.dateFormatter.formatBlogDate($page.creationDate)])</div>
+        </span>
+    </div>
+    
+    #if($!{displayType} == 'entire')
+	    <div class="wiki-content">
+	        $bodyWithHtml
+	    </div>
+    #end
+</div>

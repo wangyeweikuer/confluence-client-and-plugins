@@ -1,0 +1,71 @@
+<atlassian-plugin key="com.baidu.bkm.wiki.macro.bkm-macros" name="百度BKM页面插件集合" plugins-version="2">
+    <plugin-info>
+        <description>百度BKM开发的页面插件集合</description>
+        <version>1.0.1</version>
+        <vendor name="百度wiki团队" url="http://wiki.baidu.com" />
+        <param name="plugin-icon">images/browserLogo.png</param>
+        <param name="plugin-logo">images/browserLogo.png</param>
+    </plugin-info>
+    
+	<component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager"/>
+	
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="i18n-bkm-macros"/>
+    <resource type="download" name="images/" location="/images"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="bkm-macro-includepages-resources" name="bkm-macro-includepages Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="bkm-macro-includepages.css" location="/css/bkm-macro-includepages.css"/>
+        <resource type="download" name="bkm-macro-includepages.js" location="/js/bkm-macro-includepages.js"/>
+
+        <context>bkm-macro-includepages</context>
+        <context>editor</context>
+        <dependency>com.atlassian.confluence.tinymceplugin:editor-resources</dependency>
+    </web-resource>
+    
+    <xhtml-macro name="includepages" 
+    			class="com.baidu.bkm.wiki.macro.includepages.IncludePagesMacro" 
+    			icon="/download/resources/com.baidu.bkm.wiki.macro.bkm-macros/images/browserLogo.png" 
+    			key="bkm-macro-includepages"
+    			documentation-url="http://wiki.baidu.com/pages/viewpage.action?pageId=34289383">
+    	<device-type>mobile</device-type>
+    	<description key="com.baidu.bkm.wiki.macro.bkm-macros.includepages.desc"/>
+    	<category name="confluence-content"/>
+        <parameters>
+        	<parameter name="showparams" type="boolean" default="true">
+        	</parameter>
+        	<parameter name="displayType" type="enum" default="title">
+				<value name="title"/>
+				<value name="entire"/>
+			</parameter>
+			<parameter name="space" type="spacekey">
+			</parameter>
+        	<parameter name="labelNames" type="string" required="true">
+			</parameter>
+            <parameter name="authors" type="username" multiple="true">
+			</parameter>
+			<parameter name="dateframe" type="string">
+			</parameter>
+			<parameter name="keywords" type="string">
+			</parameter>
+			<parameter name="sort" type="enum" default="created">
+				<value name="created"/>
+				<value name="title"/>
+				<value name="modified"/>
+			</parameter>
+			<parameter name="reverse" type="boolean" default="false"/>
+        </parameters>
+    </xhtml-macro>
+    
+    <!-- import from the product container -->
+    
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
+    <component name="excerptHelper" class="com.atlassian.confluence.util.ExcerptHelper" key="excerptHelper"/>
+    
+    <web-item key="editor.link" name="includepages" section="system.editor.featured.macros.default" weight="0">
+    	<label key="com.baidu.bkm.wiki.macro.bkm-macros.includepages.label"/>
+    	<link linkId="includepages"/>
+    </web-item>
+</atlassian-plugin>

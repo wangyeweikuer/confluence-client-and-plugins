@@ -1,0 +1,2 @@
+   * Member list:
+      * Set GROUP = Main.Main.DevOpGroup,QianHaixiang,DevOpGroup,Main.zhangquansheng@baidu.com, zhangxian01,zhangquansheng@baidu.com,Ps.Main.EcomOpGroup, liweigang,Main.wangye04,Main.Main.wangye04,Main.chen.xi,Main.null，Main.OpManagerGroup,psqa-zhixinEmailGroup,chenlong02^

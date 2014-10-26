@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd"
+		default-lazy-init="false">
+	<context:component-scan base-package="com.baidu.bkm.wikiupgrade" />
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<context:property-placeholder file-encoding="utf8" location="classpath:application.properties"/>
+	<!-- <mybatis:scan base-package="com.baidu.bkm.wikiupgrade.dao" /> -->
+	<tx:annotation-driven mode="proxy" transaction-manager="transactionManager" proxy-target-class="true"/>
+	
+	<tx:advice id="transaction">
+		<tx:attributes>
+			<tx:method name="*" isolation="READ_COMMITTED" propagation="REQUIRED"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="workflow-jobs" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+ 				<ref bean="listSpaceAndPageJob"/>
+				<ref bean="importerGroupJob"/>
+				<ref bean="storeSpaceAndPageJob"/>
+<!-- 				<ref bean="fixLinkJob"/>
+				<ref bean="rebuildSearchJob"/> -->
+			</list>
+		</constructor-arg>
+	</bean>
+	<bean id="importerAndJobGroup" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<ref bean="pageParseJob"/>
+				<!-- <ref bean="pageFetchJob"/> -->
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${jdbc.driver}"/>
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	<bean id="notSpaceDirs" class="java.util.HashSet">
+		<constructor-arg>
+			<list>
+				<value>/_default</value><!-- 默认隐藏目录 -->
+				<value>/_empty</value>	<!-- 默认隐藏目录 -->
+				<value>/Trash</value>	<!-- 回收站 -->
+				<value>/TWiki</value>	<!-- 系统设置目录 -->
+				<value>/Project/</value>	<!-- icafe目录 -->
+				<value>/feedWiki</value>	<!-- 临时目录 -->
+				<value>/Ecmp/CloudAlbum</value>	<!-- Ecmp迁移目录 -->
+				<value>/Ecmp/psopspider</value> <!-- Ecmp迁移目录 -->
+				<value>/.svn</value>	<!-- 乱提交的目录 -->
+			</list>
+		</constructor-arg>
+	</bean>
+	<bean id="spaceNeededFiles" class="java.util.HashSet">
+		<constructor-arg>
+			<list>
+				<!-- <value>WebHome.txt</value> -->
+				<value>WebCreateNewTopic.txt</value>
+				<value>WebLeftBar.txt</value>
+				<value>WebPreferences.txt</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.baidu.bkm.wikiupgrade.dao"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+	<bean id="uuapCookie" class="org.apache.http.impl.cookie.BasicClientCookie2">
+		<constructor-arg name="name" value="${uuap.cookie.name}" />
+		<constructor-arg name="value" value="${uuap.cookie.value}" />
+		<property name="domain" value="${uuap.cookie.domain}" />
+		<property name="path" value="${uuap.cookie.path}" />
+	</bean>
+	<bean id="cookieStore" class="org.apache.http.impl.client.BasicCookieStore" />
+	<bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient" >
+		<property name="cookieStore" ref="cookieStore"/>
+	</bean>
+	<bean id="confluenceServerSettings" class="biz.artemis.confluence.xmlrpcwrapper.ConfluenceServerSettings">
+		<property name="login" value="${confluence.login}" />
+		<property name="password" value="${confluence.password}" />
+<!-- 		<property name="spaceKey"></property>
+		<property name="trustallcerts"></property>
+		<property name="trustpass"></property>
+		<property name="truststore"></property> -->
+		<property name="url" value="${confluence.host}" />
+	</bean>
+	<bean id="remoteWikiBroker" class="biz.artemis.confluence.xmlrpcwrapper.RemoteWikiBroker" />
+	<bean id="confluenceClient" class="biz.artemis.confluence.xmlrpcwrapper.ConfluenceClientProxy" />
+</beans>
